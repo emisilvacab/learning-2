@@ -1,0 +1,106 @@
+import { useState, useEffect, useReducer, useRef, useMemo, useCallback } from 'react';
+import { getPerson } from './getPerson';
+import { Reset } from './Reset';
+
+function sillyExpensiveFunction() {
+  console.log('Executing silly function');
+  let sum = 0;
+  for (let i = 0; i < 10000; i++) {
+    sum += i;
+  }
+  return sum;
+}
+
+export function PersonScore() {
+  type State = {
+    name: string | undefined;
+    score: number;
+    loading: boolean;
+  };
+
+  type Action =
+    | {
+        type: 'initialize';
+        name: string;
+      }
+    | {
+        type: 'increment';
+      }
+    | {
+        type: 'decrement';
+      }
+    | {
+        type: 'reset';
+      };
+
+  // const [name, setName] = useState<string | undefined>();
+  // const [score, setScore] = useState(0);
+  // const [loading, setLoading] = useState(true);
+
+  const [{ name, score, loading }, dispatch] = useReducer(reducer, {
+    name: undefined,
+    score: 0,
+    loading: true,
+  });
+
+  const addButtonRef = useRef<HTMLButtonElement>(null);
+
+  const f = useCallback(() => dispatch({ type: 'reset' }), []);
+
+  useEffect(() => {
+    getPerson().then(({ name }) => {
+      // setLoading(false);
+      // setName(person.name);
+      dispatch({ type: 'initialize', name });
+      addButtonRef.current?.focus();
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!loading) {
+      addButtonRef.current?.focus();
+    }
+  }, [loading]);
+
+  function reducer(state: State, action: Action): State {
+    switch (action.type) {
+      case 'initialize':
+        return { name: action.name, score: 0, loading: false };
+      case 'increment':
+        return { ...state, score: state.score + 1 };
+      case 'decrement':
+        return { ...state, score: state.score - 1 };
+      case 'reset':
+        return { ...state, score: 0 };
+      default:
+        return state;
+    }
+  }
+
+  const expensiveCalculation = useMemo(() => sillyExpensiveFunction(), []);
+
+  function handleReset() {
+    dispatch({ type: 'reset' });
+  }
+
+  if (loading) {
+    return <div>Loading ...</div>;
+  }
+
+  return (
+    <div>
+      <h3>
+        {name}, {score}
+      </h3>
+      <p>{expensiveCalculation}</p>
+      {/* <button onClick={() => setScore(score + 1)}>Add</button>
+      <button onClick={() => setScore(score - 1)}>Subtract</button>
+      <button onClick={() => setScore(0)}>Reset</button> */}
+      <button ref={addButtonRef} onClick={() => dispatch({ type: 'increment' })}>
+        Add
+      </button>
+      <button onClick={() => dispatch({ type: 'decrement' })}>Subtract</button>
+      <Reset onClick={handleReset} />
+    </div>
+  );
+}
