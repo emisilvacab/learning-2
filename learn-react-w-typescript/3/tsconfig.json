@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "noEmit": true,
+    // noEmit to true suppresses the TypeScript compiler from doing any transpilation.
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    // Setting allowSyntheticDefaultImports and esModuleInterop to true allows
+    // React to be imported as a default import, like the following:
+    // import React from 'react'
+    "esModuleInterop": true,
+    "jsx": "react",
+    "forceConsistentCasingInFileNames": true,
+    // Setting forceConsistentCasingInFileNames to true enables the type-checking
+    // process to check the casing of referenced filenames in import statements are consistent.
+    "strict": true
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}
