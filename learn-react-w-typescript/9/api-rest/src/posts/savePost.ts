@@ -1,4 +1,4 @@
-import { NewPostData, SavedPostData } from "./types";
+import { PostData, NewPostData, SavedPostData } from "./types";
 
 export async function savePost(newPostData: NewPostData) {
   const response = await fetch(process.env.REACT_APP_API_URL!, {
