@@ -1,14 +1,15 @@
 import { Header } from './Header';
 import { Main } from './Main';
-import { AppProvider } from './AppContext';
+import { Provider } from 'react-redux';
+import { store } from './store/store';
 
 function App() {
   return (
     <div className="max-w-7xl mx-auto px-4">
-      <AppProvider>
+      <Provider store={store}>
         <Header />
         <Main />
-      </AppProvider>
+      </Provider>
     </div>
   );
 }

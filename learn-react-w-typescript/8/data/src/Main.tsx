@@ -1,8 +1,11 @@
 import { Content } from './Content';
-import { useAppContext } from './AppContext';
+import { useSelector } from 'react-redux';
+import { RootState } from './store/store';
 
 export function Main() {
-  const { user } = useAppContext();
+  const user = useSelector(
+    (state: RootState) => state.user.user
+  );
 
   return (
     <main className="py-8">
@@ -10,7 +13,7 @@ export function Main() {
       <p className="mt-8 text-xl text-center">
         {user ? `Hello ${user.name}!` : "Please sign in"}
       </p>
-      <Content/>
+      <Content />
     </main>
   );
 }
