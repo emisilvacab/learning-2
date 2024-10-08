@@ -1,9 +1,11 @@
-import { getPosts } from "./getPosts";
 import { PostData } from "./types";
 import { PostsList } from "./PostsList";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { savePost } from "./savePost";
 import { NewPostForm } from "./NewPostForm";
+import { Await, useLoaderData, useNavigate } from "react-router-dom";
+import { Suspense } from "react";
+import { assertIsPosts } from "./getPosts";
 
 type Data = {
   posts: PostData[];
@@ -22,15 +24,7 @@ export function assertIsData(data: unknown): asserts data is Data {
 }
 
 export function PostsPage() {
-  const {
-    isLoading,
-    isFetching,
-    data: posts,
-  } = useQuery({
-    queryKey: ["postsData"],
-    queryFn: getPosts,
-  });
-
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
@@ -43,18 +37,25 @@ export function PostsPage() {
           return [savedPost, ...oldPosts];
         }
       });
+      navigate('/');
     },
   });
 
-  if (isLoading || posts === undefined) {
-    return <div className="w-96 mx-auto mt-6">Loading ...</div>;
-  }
+  const data = useLoaderData();
+  assertIsData(data);
 
   return (
     <div className="w-96 mx-auto mt-6">
       <h2 className="text-xl text-slate-900 fontbold">Posts</h2>
       <NewPostForm onSave={mutate} />
-      {isFetching ? <div>Fetching ...</div> : <PostsList posts={posts} />}
+      <Suspense fallback={<div>Fetching ...</div>}>
+        <Await resolve={data.posts}>
+          {(posts) => {
+            assertIsPosts(posts);
+            return <PostsList posts={posts} />;
+          }}
+        </Await>
+      </Suspense>
     </div>
   );
 }
