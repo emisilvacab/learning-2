@@ -1,3 +1,17 @@
+# ADD .env.local
+REACT_APP_GITHUB_PAT = your-token
+
+To get your-token:
+
+1. In a browser, go to GitHub: https://github.com/.
+2. Sign in to your GitHub account if you aren’t already signed in. You can create a GitHub accountif you haven’t got one by using the Sign  Up button.
+3. Now, open the menu under your avatar and click Settings.
+4. Next, access the Developer Settings option at the bottom of the left-hand bar.
+5. Go to the Personal access tokens page on the left-hand bar.
+6. Click the Generate new token button to start creating the PAT. You will likely be prompted to
+input your password after clicking the button.
+7. Before the token is generated, you will be asked to specify the scopes. Enter a token description, tick the repo and user scopes, and then click the Generate token button.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
