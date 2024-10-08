@@ -1,4 +1,6 @@
-import { Form, ActionFunctionArgs, redirect } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useForm, FieldError } from 'react-hook-form';
+import { ValidationError } from './ValidationError';
 
 type Contact = {
   name: string;
@@ -9,6 +11,16 @@ type Contact = {
 
 export function ContactPage() {
   const fieldStyle = "flex flex-col mb-2";
+  const { register, handleSubmit, formState: { errors } } = useForm<Contact>({
+    mode: "onBlur",
+    reValidateMode: "onBlur"
+   });
+  const navigate = useNavigate();
+
+  function onSubmit(contact: Contact) {
+    console.log('Submitted details:', contact);
+    navigate(`/thank-you/${contact.name}`);
+  }
 
   return (
     <div className="flex flex-col py-10 max-w-md mx-auto">
@@ -16,45 +28,57 @@ export function ContactPage() {
       <p className="mb-3">
         If you enter your details we'll get back to you as soon as we can.
       </p>
-      <Form method="post">
+      <form noValidate onSubmit={handleSubmit(onSubmit)}>
         <div className={fieldStyle}>
           <label htmlFor="name">Your name</label>
           <input
+            className={getEditorStyle(errors.name)}
             type="text"
             id="name"
-            name="name"
-            required
+            {...register('name', {
+              required: 'You must enter your name'
+            })}
           />
+          <ValidationError fieldError={errors.name} />
         </div>
         <div className={fieldStyle}>
           <label htmlFor="email">Your email address</label>
           <input
+            className={getEditorStyle(errors.email)}
             type="email"
             id="email"
-            name="email"
-            pattern="\S+@\S+\.\S+"
-            required
+            {...register('email', {
+              required: 'You must enter your email address',
+              pattern: {
+                value: /\S+@\S+\.\S+/,
+                message: 'Entered value does not match email format'
+              }
+            })}
           />
+          <ValidationError fieldError={errors.email} />
         </div>
         <div className={fieldStyle}>
           <label htmlFor="reason">Reason you need to contact
             us</label>
           <select
+            className={getEditorStyle(errors.reason)}
             id="reason"
-            name="reason"
-            required
+            {...register('reason', {
+              required: 'You must enter the reason for contacting us'
+            })}
           >
             <option value=""></option>
             <option value="Support">Support</option>
             <option value="Feedback">Feedback</option>
             <option value="Other">Other</option>
           </select>
+          <ValidationError fieldError={errors.reason} />
         </div>
         <div className={fieldStyle}>
           <label htmlFor="notes">Additional notes</label>
           <textarea
             id="notes"
-            name="notes"
+            {...register('notes')}
           />
         </div>
         <div>
@@ -65,20 +89,12 @@ export function ContactPage() {
             Submit
           </button>
         </div>
-      </Form>
+      </form>
     </div>
   );
 }
 
-export async function contactPageAction({ request }: ActionFunctionArgs) {
-  const formData = await request.formData();
-  const contact = {
-    name: formData.get('name'),
-    email: formData.get('email'),
-    reason: formData.get('reason'),
-    notes: formData.get('notes'),
-  } as Contact;
-  console.log('Submitted details:', contact);
-
-  return redirect(`/thank-you/${formData.get('name')}`);
+function getEditorStyle(fieldError: FieldError |
+  undefined) {
+  return fieldError ? 'border-red-500' : '';
 }
