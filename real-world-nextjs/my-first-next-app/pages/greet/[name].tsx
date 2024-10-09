@@ -1,19 +1,8 @@
-export async function getServerSideProps({
-  params,
-}: {
-  params: { name: string };
-}) {
-  const { name } = params as { name: string };
+import { useRouter } from 'next/router';
 
-  return {
-    props: {
-      name,
-    },
-  };
-}
-
-function Greet({ name }: { name: string }) {
-  return <h1> Hello, {name}! </h1>;
+function Greet() {
+ const { query } = useRouter();
+ return <h1>Hello {query.name}!</h1>;
 }
 
 export default Greet;
