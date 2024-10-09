@@ -1,24 +1,26 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Checklist } from "./Checklist";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="p-10">
+      <Checklist
+        data={[
+          { id: 1, name: "Lucy", role: "Manager" },
+          { id: 2, name: "Bob", role: "Developer" },
+          { id: 3, name: "Bill", role: "Developer" },
+          { id: 4, name: "Tara", role: "Developer" },
+          { id: 5, name: "Sara", role: "UX" },
+          { id: 6, name: "Derik", role: "QA" },
+        ]}
+        id="id"
+        primary="name"
+        secondary="role"
+        style={{
+          width: "300px",
+          maxHeight: "380px",
+          overflowY: "auto",
+        }}
+      />
     </div>
   );
 }
