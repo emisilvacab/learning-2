@@ -1,14 +1,16 @@
-import { ComponentPropsWithoutRef } from "react";
+import { ComponentPropsWithoutRef, ReactNode } from "react";
 
 type Props<Data> = {
-  // The data prop is the data that drives the items in the list
   data: Data[];
-  // The id prop is the property’s name in each data item that uniquely identifies the item
+  // The data prop is the data that drives the items in the list
   id: keyof Data;
-  // The primary prop is the property’s name in each data item that contains the main text to render in each item
+  // The id prop is the property’s name in each data item that uniquely identifies the item
   primary: keyof Data;
-  // The secondary prop is the property’s name in each data item that includes the supplementary text to render in each item
+  // The primary prop is the property’s name in each data item that contains the main text to render in each item
   secondary: keyof Data;
+  // The secondary prop is the property’s name in each data item that includes the supplementary text to render in each item
+  renderItem?: (item: Data) => ReactNode;
+  // renderItem? is a function that takes in the data item and returns what needs rendering
 } & ComponentPropsWithoutRef<"ul">;
 // This type allows us to reference the props of an HTML element such as ul. It is a generic type
 // that takes the HTML element name as a generic parameter.
@@ -18,11 +20,15 @@ export function Checklist<Data>({
   id,
   primary,
   secondary,
+  renderItem,
   ...ulProps
 }: Props<Data>) {
   return (
     <ul className="bg-gray-300 rounded p-10" {...ulProps}>
       {data.map((item) => {
+        if (renderItem) {
+          return renderItem(item);
+        }
         const idValue = item[id] as unknown;
         if (typeof idValue !== "string" && typeof idValue !== "number") {
           return null;
