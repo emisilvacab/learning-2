@@ -60,6 +60,8 @@ test("should check items when clicked", async () => {
   expect(lucyCheckbox).not.toBeChecked();
   await user.click(lucyCheckbox);
   expect(lucyCheckbox).toBeChecked();
+  await user.click(lucyCheckbox);
+  expect(lucyCheckbox).not.toBeChecked();
 });
 
 test("should call onCheckedIdsChange when clicked", async () => {
