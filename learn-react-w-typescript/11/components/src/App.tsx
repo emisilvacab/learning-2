@@ -1,6 +1,18 @@
-import { Checklist } from "./Checklist";
+import { useState } from "react";
+import { Checklist, IdValue } from "./Checklist";
 
 function App() {
+  const [checkedId, setCheckedId] = useState<IdValue | null>(null);
+
+  function handleCheckedIdsChange(newCheckedIds: IdValue[]) {
+    const newCheckedIdArr = newCheckedIds.filter((id) => id !== checkedId);
+    if (newCheckedIdArr.length === 1) {
+      setCheckedId(newCheckedIdArr[0]);
+    } else {
+      setCheckedId(null);
+    }
+  }
+
   return (
     <div className="p-10">
       <Checklist
@@ -20,6 +32,8 @@ function App() {
           maxHeight: "380px",
           overflowY: "auto",
         }}
+        checkedIds={checkedId === null ? [] : [checkedId]}
+        onCheckedIdsChange={handleCheckedIdsChange}
         // renderItem={(item) => (
         //   <li
         //     key={item.id}

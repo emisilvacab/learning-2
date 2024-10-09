@@ -1,5 +1,6 @@
 import { ComponentPropsWithoutRef, ReactNode } from "react";
 import { useChecked } from "./useChecked";
+import { IdValue } from "./types";
 
 type Props<Data> = {
   data: Data[];
@@ -12,6 +13,8 @@ type Props<Data> = {
   // The secondary prop is the property’s name in each data item that includes the supplementary text to render in each item
   renderItem?: (item: Data) => ReactNode;
   // renderItem? is a function that takes in the data item and returns what needs rendering
+  checkedIds?: IdValue[];
+  onCheckedIdsChange?: (checkedIds: IdValue[]) => void;
 } & ComponentPropsWithoutRef<"ul">;
 // This type allows us to reference the props of an HTML element such as ul. It is a generic type
 // that takes the HTML element name as a generic parameter.
@@ -22,9 +25,14 @@ export function Checklist<Data>({
   primary,
   secondary,
   renderItem,
+  checkedIds,
+  onCheckedIdsChange,
   ...ulProps
 }: Props<Data>) {
-  const { checkedIds, handleCheckChange } = useChecked();
+  const { resolvedCheckedIds, handleCheckChange } = useChecked({
+    checkedIds,
+    onCheckedIdsChange,
+  });
 
   return (
     <ul className="bg-gray-300 rounded p-10" {...ulProps}>
@@ -49,7 +57,7 @@ export function Checklist<Data>({
             <label className="flex items-center">
               <input
                 type="checkbox"
-                checked={checkedIds.includes(idValue)}
+                checked={resolvedCheckedIds.includes(idValue)}
                 onChange={handleCheckChange(idValue)}
               />
               <div className="ml-2">
