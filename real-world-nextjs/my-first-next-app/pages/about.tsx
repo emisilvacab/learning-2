@@ -1,18 +1,18 @@
 import Head from "next/head";
 import Link from "next/link";
 
-function IndexPage() {
+function AboutPage() {
   return (
     <>
       <Head>
-        <title> Welcome to my Next.js website </title>
+        <title> About this website </title>
       </Head>
       <div>
-        <Link href="/about" passHref>
-          About us
+        <Link href="/" passHref>
+          Back to home
         </Link>
       </div>
     </>
   );
 }
-export default IndexPage;
+export default AboutPage;
