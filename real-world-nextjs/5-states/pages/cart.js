@@ -1,7 +1,10 @@
 // eslint-disable-next-line no-unused-vars
-import { useContext } from "react";
 import data from "../data/items";
-import cartContext from "../components/context/CartContext";
+import { shallowEqual, useSelector } from "react-redux";
+
+function useGlobalItems() {
+  return useSelector((state) => state, shallowEqual);
+}
 
 function getFullItem(id) {
   const idx = data.findIndex((item) => item.id === id);
@@ -9,7 +12,7 @@ function getFullItem(id) {
 }
 
 function Cart() {
-  const { items } = useContext(cartContext);
+  const items = useGlobalItems();
   const total = Object.keys(items)
     .map((id) => getFullItem(id).price * items[id])
     .reduce((x, y) => x + y, 0);

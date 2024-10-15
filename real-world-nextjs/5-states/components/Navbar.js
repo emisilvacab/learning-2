@@ -1,10 +1,15 @@
-import Link from "next/link";
-import { useContext } from "react";
-import cartContext from "../components/context/CartContext";
+import Link from 'next/link';
+import { useSelector, shallowEqual } from 'react-redux';
+
+function useGlobalItems() {
+ return useSelector((state) => state, shallowEqual);
+}
 
 function Navbar() {
-  const { items } = useContext(cartContext);
-  const totalItemsAmount = Object.values(items).reduce((x, y) => x + y, 0);
+  const items = useGlobalItems();
+  const totalItemsAmount = Object.keys(items)
+    .map((key) => items[key])
+    .reduce((x, y) => x + y, 0);
 
   return (
     <div className="w-full bg-purple-600 p-4 text-white">
